@@ -1,0 +1,16 @@
+{     "author" : "elliottcable (http://ell.io/tt)"
+   
+,       "name" : "is"
+,    "private" :  true
+,    "version" : "1.0.0"
+
+,       "main" : "is.js"
+   
+,          "engines" :{"node":"~0.10.0"}
+,     "dependencies" :{"connect"                : "~2.7.0"
+                     , "send"                   : "~0.1.0"
+                     , "cheerio"                : "~0.10.0"
+                     , "less"                   : "~1.4.0"
+                     , "lodash"                 : "~1.0.0"                                        }
+,  "devDependencies" :{"coffee-script"          : "~1.4.0"
+                     , "docco"                  : "~0.4.0"                                        }}
