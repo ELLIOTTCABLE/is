@@ -27,7 +27,7 @@ exports.touchIcon = (dir, o = {}) ->
                   headers:
                      'Content-Type': 'image/png'
                      'Content-Length': buffer.length
-                     'ETag': "\"#{connect.utils.md5(buffer)}\""
+                     'ETag': "\"#{connect.utils.md5 buffer}\""
                      'Cache-Control': "public, max-age=#{options.maxAge / 1000}"
                   body: buffer
                response.writeHead 200, icon.headers
@@ -37,7 +37,6 @@ exports.touchIcon = (dir, o = {}) ->
 
 resolveIcon = (dir, dimensions, precomposed, cb, previous_err) ->
    path = p.join dir, "apple-touch-icon#{dimensions ?''}#{precomposed ?''}.png"
-   console.log path
    
    fs.stat path, (err, s) ->
       err = new Error "EEXIST, '#{path}' is not a file" unless err or s.isFile()

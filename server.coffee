@@ -9,7 +9,8 @@ cheerio = require 'cheerio'
 middlewares = require './middlewares'
 
 app = connect()
-  .use(middlewares.touchIcon())
+  .use(middlewares.touchIcon 'public/images')
+  .use(connect.favicon())
   .use(connect.logger {immediate: true, format: 'short'})
   .use(connect.logger 'dev')
   .use(connect.responseTime())
@@ -22,21 +23,26 @@ app = connect()
   .use(connect.methodOverride())
   
   .use(connect.compress())
-  .use (i, o, next) ->
-      throw "Headers already sent! Can't set X-UA-Compatible." if o.headersSent
-      o.setHeader 'X-UA-Compatible', "IE=edge,chrome=1"
+  .use (request, response, next) ->
+      throw "Headers already sent! Can't set X-UA-Compatible." if response.headersSent
+      response.setHeader 'X-UA-Compatible', "IE=edge,chrome=1"
       next()
    
   .use(connect.static path.join(__dirname, 'public'), {maxAge: 86400 *1000})
-  .use (i, o, next) ->
-      if i.url == '/public/less.js'
-         return send(i, require.resolve 'less/dist/less-1.4.0-beta')
+  .use (request, response, next) ->
+      if _(['/robots.txt', '/humans.txt']).contains request.url
+         return send(request, path.join './public', request.url)
                   .maxage(15 *86400 *1000)
-                  .pipe(o)
+                  .pipe(response)
+      
+      if request.url == '/public/less.js'
+         return send(request, require.resolve 'less/dist/less-1.4.0-beta')
+                  .maxage(15 *86400 *1000)
+                  .pipe(response)
          
-      if i.url == '/is.js'
-         return send(i, './is.js')
-                  .pipe(o)
+      if request.url == '/is.js'
+         return send(request, './is.js')
+                  .pipe(response)
       
       next()
 
