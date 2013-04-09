@@ -12,6 +12,7 @@ iss = require './is'
 
 app = connect()
   .use(middlewares.touchIcon 'public/images')
+  .use(connect.favicon())
   .use(connect.logger {immediate: true, format: 'short'})
   .use(connect.logger 'dev')
   .use(connect.responseTime())
