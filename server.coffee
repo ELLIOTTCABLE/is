@@ -9,7 +9,7 @@ cheerio = require 'cheerio'
 middlewares = require './middlewares'
 
 app = connect()
-  .use(middlewares.touchIcon())
+  .use(middlewares.touchIcon 'public/images')
   .use(connect.logger {immediate: true, format: 'short'})
   .use(connect.logger 'dev')
   .use(connect.responseTime())
