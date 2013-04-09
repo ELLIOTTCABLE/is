@@ -1,5 +1,6 @@
 #!/usr/bin/env ./node_modules/.bin/coffee
 path = require 'path'
+fs = require 'fs'
 _ = require 'lodash'
 
 connect = require 'connect'
@@ -8,6 +9,7 @@ cheerio = require 'cheerio'
 coffeeScript = require 'coffee-script'
 
 middlewares = require './middlewares'
+iss = require './is'
 
 app = connect()
   .use(middlewares.touchIcon 'public/images')
@@ -35,7 +37,7 @@ app = connect()
                   .maxage(15 *86400 *1000)
                   .pipe(response)
       
-      if request.url == '/public/less.js'
+      if request.url == '/vendor/less.js'
          return send(request, require.resolve 'less/dist/less-1.4.0-beta')
                   .maxage(15 *86400 *1000)
                   .pipe(response)
@@ -69,5 +71,15 @@ app = connect()
       next()
    
   .use(connect.static path.join(__dirname, 'public'), {maxAge: 86400 *1000})
+   
+  .use (request, response, next) ->
+      fs.readFile path.join(__dirname, 'document.html'), {encoding: 'UTF-8'}, (err, document) ->
+         builder = cheerio.load document
+         renderRoute request.url, builder
+         response.end builder.html()
+
+renderRoute = (path, builder) ->
+   iss.configure builder
+   iss.fragments['header']()
 
 require('http').createServer(app).listen 1337
