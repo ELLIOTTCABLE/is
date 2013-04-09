@@ -27,7 +27,7 @@ exports.touchIcon = (dir, o = {}) ->
                   headers:
                      'Content-Type': 'image/png'
                      'Content-Length': buffer.length
-                     'ETag': "\"#{connect.utils.md5(buffer)}\""
+                     'ETag': "\"#{connect.utils.md5 buffer}\""
                      'Cache-Control': "public, max-age=#{options.maxAge / 1000}"
                   body: buffer
                response.writeHead 200, icon.headers

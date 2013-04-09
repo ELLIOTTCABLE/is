@@ -33,7 +33,7 @@ app = connect()
   .use(connect.static path.join(__dirname, 'public'), {maxAge: 86400 *1000})
   .use (request, response, next) ->
       if _(['/robots.txt', '/humans.txt']).contains request.url
-         return send(request, path.join('./public', request.url))
+         return send(request, path.join './public', request.url)
                   .maxage(15 *86400 *1000)
                   .pipe(response)
       
