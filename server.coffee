@@ -37,7 +37,7 @@ app = connect()
                   .maxage(15 *86400 *1000)
                   .pipe(response)
       
-      if request.url == '/public/less.js'
+      if request.url == '/source/vendor/less.js'
          return send(request, require.resolve 'less/dist/less-1.4.0-beta')
                   .maxage(15 *86400 *1000)
                   .pipe(response)
