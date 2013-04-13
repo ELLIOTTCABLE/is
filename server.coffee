@@ -9,7 +9,7 @@ cheerio = require 'cheerio'
 coffeeScript = require 'coffee-script'
 
 middlewares = require './middlewares'
-iss = require './is'
+iss = require './public/source/is'
 
 app = connect()
   .use(middlewares.touchIcon 'public/images')
@@ -37,14 +37,14 @@ app = connect()
                   .maxage(15 *86400 *1000)
                   .pipe(response)
       
-      if request.url == '/vendor/less.js'
+      if request.url == '/source/vendor/less.js'
          return send(request, require.resolve 'less/dist/less-1.4.0-beta')
                   .maxage(15 *86400 *1000)
                   .pipe(response)
          
-      if _(['/is.js', '/is.map']).contains request.url
-         js     = path.resolve './is.js'
-         coffee = path.resolve './is.coffee'
+      if _(['/source/is.js', '/source/is.map']).contains request.url
+         js     = path.resolve path.join './public/source', 'is.js'
+         coffee = path.resolve path.join './public/source', 'is.coffee'
          return fs.stat js, (err, exists) ->
             if request.url == '/is.js'
                unless err? or not exists.isFile()
@@ -56,6 +56,7 @@ app = connect()
                   bare: true
                   sourceMap: true
                   generatedFile: 'is.js'
+                  sourceRoot: '/sources/'
                   sourceFiles: ['is.coffee']
                
                content = if request.url[-4..] == '.map' then v3SourceMap else js
