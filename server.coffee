@@ -1,5 +1,6 @@
 #!/usr/bin/env ./node_modules/.bin/coffee
 path = require 'path'
+fs = require 'fs'
 _ = require 'lodash'
 
 connect = require 'connect'
@@ -7,6 +8,7 @@ send = require 'send'
 cheerio = require 'cheerio'
 
 middlewares = require './middlewares'
+iss = require './is'
 
 app = connect()
   .use(middlewares.touchIcon 'public/images')
@@ -39,5 +41,15 @@ app = connect()
                   .pipe(response)
       
       next()
+   
+  .use (request, response, next) ->
+      fs.readFile path.join(__dirname, 'document.html'), {encoding: 'UTF-8'}, (err, document) ->
+         builder = cheerio.load document
+         renderRoute request.url, builder
+         response.end builder.html()
+
+renderRoute = (path, builder) ->
+   iss.configure builder
+   iss.fragments['header']()
 
 require('http').createServer(app).listen 1337
